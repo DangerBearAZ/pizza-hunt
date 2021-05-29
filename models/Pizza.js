@@ -11,6 +11,7 @@ const PizzaSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+    //this gets a function and adds to model ex format date or you should obsure a name - make sure to call function as a const
     get: (createdAtVal) => dateFormat(createdAtVal)
   },
   size: {
@@ -28,6 +29,7 @@ const PizzaSchema = new Schema({
 {
   toJSON: { 
     virtuals: true,
+    //enable to the user of the getter function to do it's thing when being rendered
     getters: true
   }, 
   id: false
@@ -38,7 +40,11 @@ const PizzaSchema = new Schema({
 // Mongoose virtuals
 // get total count of comments and replies on retrieval
 PizzaSchema.virtual('commentCount').get(function() {
-  return this.comments.length;
+  //includes all replies as well .reduce() method to tally up the total of every comment with its replies.
+  // .reduce() takes two parameters, an accumulator and a currentValue. 
+  //Here, the accumulator is total, and the currentValue is comment.
+  //.reduce() method is great for calculating a value based off of the accumulation of values in an array.
+  return this.comments.reduce((total, comment) => total + comment.replies.length + 1, 0);
 });
 
 // create the Pizza model using the PizzaSchema

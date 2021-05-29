@@ -25,7 +25,9 @@ const pizzaController = {
  // get one pizza by id
 getPizzaById({ params }, res) {
   Pizza.findOne({ _id: params.id })
+  // this is linking the comments to the pizza
     .populate({
+      // the path is what it links it by 
       path: 'comments',
       select: '-__v'
     })
