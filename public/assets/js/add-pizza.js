@@ -67,6 +67,9 @@ const handlePizzaSubmit = event => {
   })
   .catch(err => {
     console.log(err);
+    // .catch only executes on network falure to hold data
+    // adding saveRecord() will alow us to pass that to index db 
+    saveRecord(formData);
   });
 };
 
