@@ -30,7 +30,8 @@ const commentController = {
     Comment.findOneAndUpdate(
       { _id: params.commentId },
       { $push: { replies: body } },
-      { new: true }
+      //if mongoose validators are being used run validators needs to be true
+      { new: true, runValidators: true }
     )
     .then(dbPizzaData  => {
       if (!dbPizzaData) {

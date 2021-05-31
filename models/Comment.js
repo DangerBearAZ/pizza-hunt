@@ -1,4 +1,4 @@
-const { Schema, model, Types} = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
 // replies go before comment beacuse they are nested 
@@ -10,21 +10,25 @@ const ReplySchema = new Schema(
             default: () => new Types.ObjectId()
         },
         replyBody: {
-            type: String
+            type: String,
+            required: true,
+            trim: true
         },
         writtenBy: {
-            type: String
+            type: String,
+            required: true,
+            trim: true
         },
         createdAt: {
             type: Date,
             default: Date.now,
-            get: createdAtVal =>(createdAtVal)
+            get: createdAtVal => (createdAtVal)
         }
     },
     {
         toJSON: {
-          // using out side functions must set the getter to true 
-            getters: true 
+            // using out side functions must set the getter to true 
+            getters: true
         }
     }
 );
@@ -33,34 +37,39 @@ const ReplySchema = new Schema(
 
 const CommentSchema = new Schema(
     {
-    writtenBy: {
-        type: String
+        writtenBy: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        commentBody: {
+            type: String,
+            required: true,
+            trim: true
+
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: createdAtVal => dateFormat(createdAtVal)
+        },
+        // use ReplySchema to validate data for a reply
+        replies: [ReplySchema]
     },
-    commentBody: {
-        type: String
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        get: createdAtVal => dateFormat(createdAtVal)
-    },
-    // use ReplySchema to validate data for a reply
-    replies: [ReplySchema]
-},
-{
-    toJSON: {
-        // this set to true lets us use moongoose virtuals with out it virtuals will not work
-        virtuals: true,
-        getters: true
-    },
-    id: false
-}
+    {
+        toJSON: {
+            // this set to true lets us use moongoose virtuals with out it virtuals will not work
+            virtuals: true,
+            getters: true
+        },
+        id: false
+    }
 );
 
 // this is getting a count using a mongoose virtual 
-CommentSchema.virtual('replyCount').get(function() {
+CommentSchema.virtual('replyCount').get(function () {
     return this.replies.length;
-}); 
+});
 
 const Comment = model('Comment', CommentSchema);
 
