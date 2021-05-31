@@ -16,7 +16,7 @@ request.onupgradeneeded = function(event) {
     const db = event.target.result; 
     // create an oject store (table) "container the keeps of line data"
     //set it to have an auto incrementing primary key of sorts 
-    db.createObjectStore('new_pizza', { autoInccrement: true });
+    db.createObjectStore('new_pizza', { autoIncrement: true });
 };
 
     //upon a successful 
@@ -38,6 +38,7 @@ request.onupgradeneeded = function(event) {
 
 // This function will be executed if we attempt to submit a new pizza and there's no internet connection
 function saveRecord(record) {
+    console.log(record)
     // open a new transaction with the data base with read and write ermisson 
     const transaction = db.transaction(['new_pizza'], 'readwrite');
     //access the object store for `new_pizza`
